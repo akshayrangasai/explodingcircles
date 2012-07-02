@@ -73,10 +73,11 @@ function build_body()
 			this.half_height = 40;
 			this.left = this.center_x - this.half_width;
 			this.top = this.center_y - this.half_height;
-			this.momentum = function()
+			this.momentum = function(obj)
 				{
-					document.getElementById(this.id).style.top = (center_of_concentric_circles.y - this.half_height)+"px";
-					document.getElementById(this.id).style.left = (center_of_concentric_circles.x - this.half_width)+"px";
+					obj.style.top = (center_of_concentric_circles.y - this.half_height)+"px";
+					//document.getElementById(this.id)
+					obj.style.left = (center_of_concentric_circles.x - this.half_width)+"px";
 				}
 			this.build = function(parent_element)
 				{
@@ -92,14 +93,16 @@ function build_body()
 				parent_element.appendChild(div);//parent_element.appendChild(div);	
 				var obj = this;
 				div.addEventListener('click',function(){
-				obj.momentum();
+				obj.center(this);
 				}
 				,false);
 				};
-			this.center = function()
+			this.center = function(obj)
 				{
-					document.getElementById(this.id).style.top = (center_of_concentric_circles.y - this.half_height)+"px";
-					document.getElementById(this.id).style.left = (center_of_concentric_circles.x - this.half_width)+"px";
+					//document.getElementById(this.id)
+					obj.style.top = (center_of_concentric_circles.y - this.half_height)+"px";
+					//document.getElementById(this.id)
+					obj.style.left = (center_of_concentric_circles.x - this.half_width)+"px";
 				};
 			this.reset = function()
 				{
@@ -126,7 +129,7 @@ function build_body()
 					{
 						layers.outer[i].build();
 					}
-				window.setTimeout(function(){layers.outer[0].center();},1700);
+				//window.setTimeout(function(){layers.outer[0].center();},1700);
 						
 			}
 		

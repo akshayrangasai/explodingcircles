@@ -73,10 +73,11 @@ function build_body()
 			this.half_height = 40;
 			this.left = this.center_x - this.half_width;
 			this.top = this.center_y - this.half_height;
-			this.momentum = function()
+			this.momentum = function(obj)
 				{
-					document.getElementById(this.id).style.top = (center_of_concentric_circles.y - this.half_height)+"px";
-					document.getElementById(this.id).style.left = (center_of_concentric_circles.x - this.half_width)+"px";
+					obj.style.top = (center_of_concentric_circles.y - this.half_height)+"px";
+					//document.getElementById(this.id)
+					obj.style.left = (center_of_concentric_circles.x - this.half_width)+"px";
 				}
 			this.build = function(parent_element)
 				{
@@ -90,16 +91,35 @@ function build_body()
 				div.style.top = (this.top)+"px";
 				div.style.left = (this.left)+"px";
 				parent_element.appendChild(div);//parent_element.appendChild(div);	
+				
+				/*
+				This part is slighta complicated
 				var obj = this;
+				this makes me refer to the this of the _object_, *NOT* the DoM div
+				*/
+				
+				var obj = this;
+				
+				/*
+				
+				In the event listener case, the this is referred to the div DoM this. Therefore I add the argument this to the function. We're basically 					passing the div to the function. Makes our manipulation N peaceful. I have basically made 2 objects behave similarly. give the div properties
+				to a JS object and using the functions in there, to the DoM object. both eseentially behaving like clones :P using a this inside the function will result in the JS object being called not the DoM. Scope fucks :P
+				
+				*/ 
+				
 				div.addEventListener('click',function(){
-				obj.momentum();
+				obj.center(this);
 				}
 				,false);
+				
+				
 				};
-			this.center = function()
+			this.center = function(obj)
 				{
-					document.getElementById(this.id).style.top = (center_of_concentric_circles.y - this.half_height)+"px";
-					document.getElementById(this.id).style.left = (center_of_concentric_circles.x - this.half_width)+"px";
+					//document.getElementById(this.id)
+					obj.style.top = (center_of_concentric_circles.y - this.half_height)+"px";
+					//document.getElementById(this.id)
+					obj.style.left = (center_of_concentric_circles.x - this.half_width)+"px";
 				};
 			this.reset = function()
 				{
