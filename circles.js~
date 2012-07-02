@@ -1,3 +1,9 @@
+/*
+
+
+READ README BEFORE PROCEEDING
+
+*/
 window.onload = function(){
 //This I am using to load into DOM. Waiting for Body to load.
 function build_body()
@@ -58,9 +64,15 @@ function build_body()
 			this.center_y = center_of_concentric_circles.y - rad*Math.sin(theta);
 			//-sign is because of DoM coordinate system
 			this.radius = rad;
+			this.prefix = prefix;
+			this.theta = theta;
+			this.id = prefix+theta;
+
 			//Width and height attribute of the divs 45px radius (Reasonable?)
 			this.half_width = 40;
 			this.half_height = 40;
+			this.left = this.center_x - this.half_width;
+			this.top = this.center_y - this.half_height;
 			this.build = function(parent_element)
 				{
 				parent_element = parent_element || document.body;//typeof parent_element !== undefined ? parent_element : document.body;
@@ -70,26 +82,24 @@ function build_body()
 				div.style.width = this.half_width*2+"px";
 				div.style.height = this.half_height*2+"px";
 				div.style.position = "absolute";
-				div.style.top = (this.center_y - this.half_height)+"px";
-				div.style.left = (this.center_x - this.half_width)+"px";
+				div.style.top = (this.top)+"px";
+				div.style.left = (this.left)+"px";
 				document.body.appendChild(div);//parent_element.appendChild(div);	
+				};
+			this.center = function()
+				{
+					document.getElementById(this.id).style.top = (center_of_concentric_circles.y - this.half_height)+"px";
+					document.getElementById(this.id).style.left = (center_of_concentric_circles.x - this.half_width)+"px";
+				};
+			this.reset = function()
+				{
+					document.getElementById(this.id).style.top = (this.top)+"px";
+					document.getElementById(this.id).style.left = (this.left)+"px";
 				};
 			//console.log(this.center_x);
 			}
 
-
-		/*create_circle.prototype.build = function(parent_element)
-				{
-				parent_element = parent_element || document.body;//typeof parent_element !== undefined ? parent_element : document.body;
-				var div = document.createElement('div');
-				div.setAttribute('id',(prefix+theta));
-				div.setAttribute('class',(prefix+" circle_class"));
-				div.style.position = "absolute";
-				div.style.top = (center_y - half_height)+"px";
-				div.style.left = (center_x - half_width)+"px";
-				document.body.appendChild(div);//parent_element.appendChild(div);	
-				};
-		*/	
+	
 		function build_elements()
 			{
 				var i = 0;
@@ -106,7 +116,11 @@ function build_body()
 					{
 						layers.outer[i].build();
 					}
+				layers.outer[0].center();
+						
 			}
+		
 	}
 	build_body();
+
 }
