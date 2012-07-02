@@ -1,7 +1,8 @@
 /*
 
 
-READ README BEFORE PROCEEDING
+Ok, Most of the shit is done. Now the momentum thing is a pain. Drag drop of jQuery is failing :p
+We need to write out own. Using CSS3 for the current "animation" Ping when in doubt. I didn't document. Too busy writing this :/
 
 */
 window.onload = function(){
@@ -75,9 +76,31 @@ function build_body()
 			this.top = this.center_y - this.half_height;
 			this.momentum = function(obj,x,y,t)
 				{
-					obj.style.top = (center_of_concentric_circles.y - this.half_height)+"px";
-					//document.getElementById(this.id)
-					obj.style.left = (center_of_concentric_circles.x - this.half_width)+"px";
+				x = x || 10;
+				y = y || 10;
+				t = t || .2;
+					var V = {
+					x : x/t,
+					y : y/t
+					};
+					var fric = .1;
+					var gravity = 9.8;
+					//s = ut + 1/2at^2 :P
+					//V^2 = U^2 + 2as :P
+					//Sx = V.x^2/2*fric*9.8
+					var S = 
+					{
+					x: ((V.x)^2)/(2*fric*gravity),
+					y: ((V.y)^2)/(2*fric*gravity),
+					};
+					
+					
+					var initx = parseInt(obj.style.left);
+					var inity = parseInt(obj.style.top);
+					
+					obj.style.top = inity + S.y + "px";//(center_of_concentric_circles.y - this.half_height)+"px";
+					
+					obj.style.left = initx + S.x + "px";//(center_of_concentric_circles.x - this.half_width)+"px";
 				}
 			this.build = function(parent_element)
 				{
@@ -111,7 +134,7 @@ function build_body()
 				*/ 
 				
 				div.addEventListener('click',function(){
-				this.set_momentum(1,1,1);
+				this.set_momentum();
 				}
 				
 				,false);
@@ -119,10 +142,11 @@ function build_body()
 				/*
 				I made the Div an object with new methods. We can sense drag drop using jQuery figure out time difference and x and y val differences and set momentum The arguments are self explanatory
 				*/
-				
+				this.coords = new Array;
+				this.time = new Array;
 				div.set_momentum = function(difx,dify,tim){obj.momentum(this,difx,dify,tim)};
+				div.reset = function(){obj.reset(this)};
 				
-				delete div;
 				};
 			this.center = function(obj)
 				{
@@ -131,10 +155,10 @@ function build_body()
 					//document.getElementById(this.id)
 					obj.style.left = (center_of_concentric_circles.x - this.half_width)+"px";
 				};
-			this.reset = function()
+			this.reset = function(obj)
 				{
-					document.getElementById(this.id).style.top = (this.top)+"px";
-					document.getElementById(this.id).style.left = (this.left)+"px";
+					obj.style.top = (this.top)+"px";
+					obj.style.left = (this.left)+"px";
 				};
 			//console.log(this.center_x);
 			}
@@ -147,6 +171,33 @@ function build_body()
 				for(;i<layers.inner.length;i++)
 					{
 						layers.inner[i].build();
+				/*
+				
+				jQuery Drag
+				Failing
+				
+				$(layers.inner[i].id).draggable({
+				start:function(e,ui)
+				{
+				console.log("Drag Start");
+				this.time[0] = new Date();
+				this.coords[0] = parseInt(this.style.top,10);
+				this.coords[1] = parseInt(this.style.left,10);
+				
+				},
+				stop:function(e,ui)
+				{
+				this.time[1] = new Date();
+				this.coords[2] = parseInt(this.style.top,10);
+				this.coords[3] = parseInt(this.style.left,10);
+				difx = this.coords[2]-this.coords[0];
+				dify = this.coords[3]-this.coords[1];
+				tim = this.time[1]-this.time[0];
+				this.set_momentum(difx,dify,tim);
+				},
+							
+				});*/
+				
 					}
 				for(i = 0;i<layers.middle.length;i++)
 					{
@@ -156,7 +207,8 @@ function build_body()
 					{
 						layers.outer[i].build();
 					}
-				window.setTimeout(function(){document.getElementById('o1').set_momentum(1,1,1);},1700);
+				window.setTimeout(function(){document.getElementById('o1').set_momentum(1,1,1);},700);
+				window.setTimeout(function(){document.getElementById('o1').reset();},2100);
 						
 			}
 		
