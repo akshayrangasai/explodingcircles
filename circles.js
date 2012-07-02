@@ -50,14 +50,14 @@ function build_body()
 			//Angles in radians VERY Important
 			while(i<no_of_elem)
 				{
-				var topush = new create_circle(radius_of_circle,theta_step_radian*i,prefix);
+				var topush = new create_circle(radius_of_circle,theta_step_radian*i,prefix, i);
 				elements.push(topush);
 				i++;
 				}
 				return elements;
 			}
 
-		function create_circle(rad,theta,prefix)
+		function create_circle(rad,theta,prefix,i)
 			{
 			console.log(prefix);
 			this.center_x = center_of_concentric_circles.x + rad*Math.cos(theta);
@@ -66,14 +66,14 @@ function build_body()
 			this.radius = rad;
 			this.prefix = prefix;
 			this.theta = theta;
-			this.id = prefix+theta;
+			this.id = prefix+i;
 
 			//Width and height attribute of the divs 45px radius (Reasonable?)
 			this.half_width = 40;
 			this.half_height = 40;
 			this.left = this.center_x - this.half_width;
 			this.top = this.center_y - this.half_height;
-			this.momentum = function(obj)
+			this.momentum = function(obj,x,y,t)
 				{
 					obj.style.top = (center_of_concentric_circles.y - this.half_height)+"px";
 					//document.getElementById(this.id)
@@ -83,7 +83,7 @@ function build_body()
 				{
 				parent_element = parent_element || document.body;//typeof parent_element !== undefined ? parent_element : document.body;
 				var div = document.createElement('div');
-				div.setAttribute('id',(prefix+theta));
+				div.setAttribute('id',this.id);
 				div.setAttribute('class',(prefix+" circle_class"));
 				div.style.width = this.half_width*2+"px";
 				div.style.height = this.half_height*2+"px";
@@ -105,14 +105,24 @@ function build_body()
 				In the event listener case, the this is referred to the div DoM this. Therefore I add the argument this to the function. We're basically 					passing the div to the function. Makes our manipulation N peaceful. I have basically made 2 objects behave similarly. give the div properties
 				to a JS object and using the functions in there, to the DoM object. both eseentially behaving like clones :P using a this inside the function will result in the JS object being called not the DoM. Scope fucks :P
 				
+				
+				HA! Scope pain pack :D It is there, but I have added methods to object and div :D therefore, we have to define the fumctions based on scope :/ Will have to decide on better approach.
+				
 				*/ 
 				
 				div.addEventListener('click',function(){
-				obj.center(this);
+				this.set_momentum(1,1,1);
 				}
+				
 				,false);
 				
+				/*
+				I made the Div an object with new methods. We can sense drag drop using jQuery figure out time difference and x and y val differences and set momentum The arguments are self explanatory
+				*/
 				
+				div.set_momentum = function(difx,dify,tim){obj.momentum(this,difx,dify,tim)};
+				
+				delete div;
 				};
 			this.center = function(obj)
 				{
@@ -146,7 +156,7 @@ function build_body()
 					{
 						layers.outer[i].build();
 					}
-				//window.setTimeout(function(){layers.outer[0].center();},1700);
+				window.setTimeout(function(){document.getElementById('o1').set_momentum(1,1,1);},1700);
 						
 			}
 		
