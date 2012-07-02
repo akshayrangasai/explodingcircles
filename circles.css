@@ -4,6 +4,6 @@ READ README BEFORE PROCEEDING
 .circle_class
 	{
 	background :url('./background.png');
-	-webkit-transition : all 3s ease-out;
+	-webkit-transition : all .5s ease-in-out;
 	}
 	

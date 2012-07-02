@@ -73,6 +73,11 @@ function build_body()
 			this.half_height = 40;
 			this.left = this.center_x - this.half_width;
 			this.top = this.center_y - this.half_height;
+			this.momentum = function()
+				{
+					document.getElementById(this.id).style.top = (center_of_concentric_circles.y - this.half_height)+"px";
+					document.getElementById(this.id).style.left = (center_of_concentric_circles.x - this.half_width)+"px";
+				}
 			this.build = function(parent_element)
 				{
 				parent_element = parent_element || document.body;//typeof parent_element !== undefined ? parent_element : document.body;
@@ -84,7 +89,12 @@ function build_body()
 				div.style.position = "absolute";
 				div.style.top = (this.top)+"px";
 				div.style.left = (this.left)+"px";
-				document.body.appendChild(div);//parent_element.appendChild(div);	
+				parent_element.appendChild(div);//parent_element.appendChild(div);	
+				var obj = this;
+				div.addEventListener('click',function(){
+				obj.momentum();
+				}
+				,false);
 				};
 			this.center = function()
 				{
@@ -116,7 +126,7 @@ function build_body()
 					{
 						layers.outer[i].build();
 					}
-				window.setTimeout(function(){layers.outer[0].center();},1700);
+				//window.setTimeout(function(){layers.outer[0].center();},1700);
 						
 			}
 		
